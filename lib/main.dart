@@ -33,12 +33,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Authenticator(
       dialCodeOptions: const DialCodeOptions(defaultDialCode: DialCode.jp),
-      // authenticatorBuilder: (context, state) {
-      //   return Padding(
-      //     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 30),
-      //     child: SignInForm(),
-      //   );
-      // },
+      initialStep: AuthenticatorStep.onboarding,
       child: MaterialApp(
         builder: Authenticator.builder(),
         title: 'Flutter Demo',
@@ -49,7 +44,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (BuildContext context) {
-            return const Center(child: Text('Home'));
+            return const Scaffold(body: Center(child: SignOutButton()));
           },
           '/profile': (BuildContext context) {
             return const AuthenticatedView(
