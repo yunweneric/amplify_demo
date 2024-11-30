@@ -30,9 +30,11 @@ frontend:
     build:
       commands:
         - echo "Building Flutter APK"
-        - flutter build apk --release
+        # - flutter build apk --release
+        - flutter build web
   artifacts:
-    baseDirectory: build/app/outputs/flutter-apk
+    # baseDirectory: build/app/outputs/flutter-apk
+    baseDirectory: build/web
     files:
       - "*.apk"
   cache:
