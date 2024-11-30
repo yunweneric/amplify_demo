@@ -37,6 +37,9 @@ frontend:
         - export PATH="$PATH:$(pwd)/flutter/bin"
         - flutter doctor
         - flutter pub get
+        # Listing files in directory
+        - pwd
+        - ls -la
     build:
       commands:
         - echo "Building Flutter APK"
