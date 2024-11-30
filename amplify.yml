@@ -6,11 +6,38 @@ backend:
         - npm ci --cache .npm --prefer-offline
         - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo "Installing Android SDK and setting up environment variables"
+        # Install Android Command Line Tools
+        - curl -O https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+        - mkdir -p $HOME/android-sdk/cmdline-tools
+        - unzip commandlinetools-linux-9477386_latest.zip -d $HOME/android-sdk/cmdline-tools
+        - mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
+        # Set environment variables
+        - export ANDROID_HOME=$HOME/android-sdk
+        - export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+        # Accept SDK licenses
+        - yes | sdkmanager --licenses
+        # Install required SDK tools and platforms
+        - sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0"
+        # Install Flutter dependencies
+        - curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
+        - tar xf flutter_linux_3.24.0-stable.tar.xz
+        - export PATH="$PATH:$(pwd)/flutter/bin"
+        - flutter doctor
+        - flutter pub get
+    build:
+      commands:
+        - echo "Building Flutter APK"
+        - flutter build apk --release
   artifacts:
-    baseDirectory: output/demo
-    # baseDirectory: build/
+    baseDirectory: build/app/outputs/flutter-apk
     files:
-      - "**/*"
+      - "*.apk"
   cache:
     paths:
       - .pub-cache/**/* # Cache Flutter dependencies
+      - amplify/.cache # Cache Amplify backend build artifacts
+      - $HOME/android-sdk # Cache Android SDK to avoid reinstallation
