@@ -3,12 +3,12 @@ frontend:
   phases:
     preBuild:
       commands:
-        - echo "Setting up Java 8 for Android SDK"
-        # Install Java 8 (OpenJDK 8)
-        - curl -O https://download.java.net/openjdk/jdk8u/8u342-b07/ri/openjdk-8u342-b07-linux-x64.tar.gz
+        - echo "Setting up Java 11 for Android SDK"
+        # Install Java 11 (Amazon Corretto 11)
+        - curl -sL https://adoptium.net/releases.html?variant=openjdk11 | grep -o 'https://cdn.azul.com/amazon-corretto/11/latest/amazon-corretto-11-x64-linux-jdk.tar.gz' | head -n 1 | xargs curl -O
         - mkdir -p $HOME/java
-        - tar -xzf openjdk-8u342-b07-linux-x64.tar.gz -C $HOME/java
-        - export JAVA_HOME=$HOME/java/jdk1.8.0_342
+        - tar -xzf amazon-corretto-11-x64-linux-jdk.tar.gz -C $HOME/java
+        - export JAVA_HOME=$HOME/java/amazon-corretto-11-x64-linux-jdk
         - export PATH=$JAVA_HOME/bin:$PATH
         - java -version
         # Install Android SDK
