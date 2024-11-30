@@ -5,12 +5,22 @@ frontend:
       commands:
         - echo "Setting up Java and Android SDK"
         # Download and install OpenJDK manually
-        - curl -O https://download.java.net/openjdk/jdk11/ri/openjdk-11+28_linux-x64_bin.tar.gz
+        # - curl -O https://download.java.net/openjdk/jdk11/ri/openjdk-11+28_linux-x64_bin.tar.gz
+        # - mkdir -p $HOME/java
+        # - tar -xzf openjdk-11+28_linux-x64_bin.tar.gz -C $HOME/java
+        # - export JAVA_HOME=$HOME/java/jdk-11
+        # - export PATH=$JAVA_HOME/bin:$PATH
+        # - java -version
+
+        - echo "Setting up Java 17 for Android SDK"
+        # Install Java 17
+        - curl -O https://download.java.net/openjdk/jdk17/ri/openjdk-17+35_linux-x64_bin.tar.gz
         - mkdir -p $HOME/java
-        - tar -xzf openjdk-11+28_linux-x64_bin.tar.gz -C $HOME/java
-        - export JAVA_HOME=$HOME/java/jdk-11
+        - tar -xzf openjdk-17+35_linux-x64_bin.tar.gz -C $HOME/java
+        - export JAVA_HOME=$HOME/java/jdk-17
         - export PATH=$JAVA_HOME/bin:$PATH
         - java -version
+
         # Install Android SDK
         - echo "Installing Android SDK"
         - curl -O https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
