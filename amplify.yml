@@ -1,24 +1,16 @@
 version: 1
-# backend:
-#   phases:
-#     build:
-#       commands:
-#         - npm ci --cache .npm --prefer-offline
-#         - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 frontend:
   phases:
     preBuild:
       commands:
-        - echo "Installing Java and Android SDK"
-        # Install OpenJDK
-        - sudo apt update
-        - sudo apt install -y openjdk-11-jdk
-        # Set JAVA_HOME environment variable
-        - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+        - echo "Setting up Java and Android SDK"
+        # Download and install OpenJDK manually
+        - curl -O https://download.java.net/openjdk/jdk11/ri/openjdk-11+28_linux-x64_bin.tar.gz
+        - mkdir -p $HOME/java
+        - tar -xzf openjdk-11+28_linux-x64_bin.tar.gz -C $HOME/java
+        - export JAVA_HOME=$HOME/java/jdk-11
         - export PATH=$JAVA_HOME/bin:$PATH
-        # Verify Java installation
         - java -version
-        - echo "Installing Android SDK"
         # Install Android Command Line Tools
         - curl -O https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
         - mkdir -p $HOME/android-sdk/cmdline-tools
@@ -27,9 +19,7 @@ frontend:
         # Set environment variables for Android SDK
         - export ANDROID_HOME=$HOME/android-sdk
         - export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
-        # Accept SDK licenses
         - yes | sdkmanager --licenses
-        # Install required SDK tools and platforms
         - sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0"
         # Install Flutter
         - curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
