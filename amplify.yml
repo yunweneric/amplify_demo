@@ -30,7 +30,7 @@ frontend:
         - tar xf flutter_linux_3.24.0-stable.tar.xz
         - export PATH="$PATH:$(pwd)/flutter/bin"
         - flutter doctor
-        - flutter pub get
+        - flutter clean && flutter pub get
 
     build:
       commands:
