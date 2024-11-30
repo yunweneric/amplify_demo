@@ -29,13 +29,14 @@ frontend:
         - flutter pub get
     build:
       commands:
-        - echo "Building Flutter APK"
-        # - flutter build apk --release
-        - flutter build web
+        - echo "Building Flutter Web "
+        - flutter build apk --release
+        # - flutter build web
   artifacts:
-    # baseDirectory: build/app/outputs/flutter-apk
-    baseDirectory: build/web
+    baseDirectory: build/app/outputs/flutter-apk
+    # baseDirectory: build/web
     files:
+      # - "**/*"
       - "*.apk"
   cache:
     paths:
