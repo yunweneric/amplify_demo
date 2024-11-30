@@ -1,16 +1,19 @@
 version: 1
+
 frontend:
   phases:
     preBuild:
       commands:
-        - echo "Setting up Java 11 for Android SDK"
-        # Install Java 11
-        - curl -O https://download.java.net/openjdk/jdk11/ri/openjdk-11+28_linux-x64_bin.tar.gz
+        - echo "Setting up Java 17 for Android SDK"
+
+        # Install Java 17
+        - curl -O https://download.java.net/openjdk/jdk17/ri/openjdk-17+35_linux-x64_bin.tar.gz
         - mkdir -p $HOME/java
-        - tar -xzf openjdk-11+28_linux-x64_bin.tar.gz -C $HOME/java
-        - export JAVA_HOME=$HOME/java/jdk-11
+        - tar -xzf openjdk-17+35_linux-x64_bin.tar.gz -C $HOME/java
+        - export JAVA_HOME=$HOME/java/jdk-17
         - export PATH=$JAVA_HOME/bin:$PATH
         - java -version
+
         # Install Android SDK
         - echo "Installing Android SDK"
         - curl -O https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
@@ -21,22 +24,21 @@ frontend:
         - export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
         - yes | sdkmanager --licenses
         - sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0"
+
         # Install Flutter
         - curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
         - tar xf flutter_linux_3.24.0-stable.tar.xz
         - export PATH="$PATH:$(pwd)/flutter/bin"
         - flutter doctor
         - flutter pub get
+
     build:
       commands:
-        - echo "Building Flutter Web "
+        - echo "Building Flutter APK"
         - flutter build apk --release
-        # - flutter build web
   artifacts:
     baseDirectory: build/app/outputs/flutter-apk
-    # baseDirectory: build/web
     files:
-      # - "**/*"
       - "*.apk"
   cache:
     paths:
