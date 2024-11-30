@@ -30,8 +30,12 @@ showTodoAddModal({required BuildContext context, required Function onPop}) {
               ElevatedButton(
                 onPressed: () async {
                   if (controller.text.isEmpty) return;
-                  final newTodo = Todo(content: controller.text.trim(), id: Random().nextInt(200).toString());
-                  final request = ModelMutations.create(newTodo, authorizationMode: APIAuthorizationType.iam);
+                  final newTodo = Todo(
+                    content: controller.text.trim(),
+                    id: Random().nextInt(200).toString(),
+                    isDone: false,
+                  );
+                  final request = ModelMutations.create(newTodo);
                   final response = await Amplify.API.mutate(request: request).response;
                   if (response.hasErrors) {
                     safePrint('Creating Todo failed.');

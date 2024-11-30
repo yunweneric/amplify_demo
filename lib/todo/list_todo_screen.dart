@@ -15,9 +15,9 @@ class _ListTodoScreenState extends State<ListTodoScreen> {
   List<Todo> _todos = [];
   Future<void> _refreshTodos() async {
     try {
-      final request = ModelQueries.list(Todo.classType, authorizationMode: APIAuthorizationType.iam);
+      // final request = ModelQueries.list(Todo.classType, authorizationMode: APIAuthorizationType.iam);
 
-      // final request = ModelQueries.list(Todo.classType);
+      final request = ModelQueries.list(Todo.classType);
       final response = await Amplify.API.query(request: request).response;
 
       final todos = response.data?.items;
@@ -90,6 +90,6 @@ class TodoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(todo.content);
+    return ListTile(title: Text(todo.content));
   }
 }

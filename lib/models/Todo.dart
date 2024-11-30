@@ -28,6 +28,7 @@ class Todo extends amplify_core.Model {
   static const classType = const _TodoModelType();
   final String id;
   final String? _content;
+  final bool? _isDone;
   final amplify_core.TemporalDateTime? _createdAt;
   final amplify_core.TemporalDateTime? _updatedAt;
 
@@ -57,6 +58,19 @@ class Todo extends amplify_core.Model {
     }
   }
   
+  bool get isDone {
+    try {
+      return _isDone!;
+    } catch(e) {
+      throw amplify_core.AmplifyCodeGenModelException(
+          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
+  
   amplify_core.TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -65,12 +79,13 @@ class Todo extends amplify_core.Model {
     return _updatedAt;
   }
   
-  const Todo._internal({required this.id, required content, createdAt, updatedAt}): _content = content, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Todo._internal({required this.id, required content, required isDone, createdAt, updatedAt}): _content = content, _isDone = isDone, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Todo({String? id, required String content}) {
+  factory Todo({String? id, required String content, required bool isDone}) {
     return Todo._internal(
       id: id == null ? amplify_core.UUID.getUUID() : id,
-      content: content);
+      content: content,
+      isDone: isDone);
   }
   
   bool equals(Object other) {
@@ -82,7 +97,8 @@ class Todo extends amplify_core.Model {
     if (identical(other, this)) return true;
     return other is Todo &&
       id == other.id &&
-      _content == other._content;
+      _content == other._content &&
+      _isDone == other._isDone;
   }
   
   @override
@@ -95,6 +111,7 @@ class Todo extends amplify_core.Model {
     buffer.write("Todo {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("content=" + "$_content" + ", ");
+    buffer.write("isDone=" + (_isDone != null ? _isDone!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -102,34 +119,39 @@ class Todo extends amplify_core.Model {
     return buffer.toString();
   }
   
-  Todo copyWith({String? content}) {
+  Todo copyWith({String? content, bool? isDone}) {
     return Todo._internal(
       id: id,
-      content: content ?? this.content);
+      content: content ?? this.content,
+      isDone: isDone ?? this.isDone);
   }
   
   Todo copyWithModelFieldValues({
-    ModelFieldValue<String>? content
+    ModelFieldValue<String>? content,
+    ModelFieldValue<bool>? isDone
   }) {
     return Todo._internal(
       id: id,
-      content: content == null ? this.content : content.value
+      content: content == null ? this.content : content.value,
+      isDone: isDone == null ? this.isDone : isDone.value
     );
   }
   
   Todo.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
       _content = json['content'],
+      _isDone = json['isDone'],
       _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'content': _content, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'content': _content, 'isDone': _isDone, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
     'id': id,
     'content': _content,
+    'isDone': _isDone,
     'createdAt': _createdAt,
     'updatedAt': _updatedAt
   };
@@ -137,13 +159,15 @@ class Todo extends amplify_core.Model {
   static final amplify_core.QueryModelIdentifier<TodoModelIdentifier> MODEL_IDENTIFIER = amplify_core.QueryModelIdentifier<TodoModelIdentifier>();
   static final ID = amplify_core.QueryField(fieldName: "id");
   static final CONTENT = amplify_core.QueryField(fieldName: "content");
+  static final ISDONE = amplify_core.QueryField(fieldName: "isDone");
   static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Todo";
     modelSchemaDefinition.pluralName = "Todos";
     
     modelSchemaDefinition.authRules = [
       amplify_core.AuthRule(
-        authStrategy: amplify_core.AuthStrategy.PRIVATE,
+        authStrategy: amplify_core.AuthStrategy.PUBLIC,
+        provider: amplify_core.AuthRuleProvider.APIKEY,
         operations: const [
           amplify_core.ModelOperation.CREATE,
           amplify_core.ModelOperation.UPDATE,
@@ -158,6 +182,12 @@ class Todo extends amplify_core.Model {
       key: Todo.CONTENT,
       isRequired: true,
       ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+      key: Todo.ISDONE,
+      isRequired: true,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.bool)
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(
