@@ -7,7 +7,8 @@ backend:
         - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 frontend:
   artifacts:
-    baseDirectory: build/web
+    baseDirectory: output/demo
+    # baseDirectory: build/
     files:
       - "**/*"
   cache:
