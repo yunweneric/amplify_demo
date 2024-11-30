@@ -1,10 +1,4 @@
 version: 1
-backend:
-  phases:
-    build:
-      commands:
-        - echo "Building backend resources with Amplify"
-        - amplify push --yes
 frontend:
   phases:
     preBuild:
