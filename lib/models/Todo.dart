@@ -44,8 +44,17 @@ class Todo extends amplify_core.Model {
       );
   }
   
-  String? get content {
-    return _content;
+  String get content {
+    try {
+      return _content!;
+    } catch(e) {
+      throw amplify_core.AmplifyCodeGenModelException(
+          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   amplify_core.TemporalDateTime? get createdAt {
@@ -56,9 +65,9 @@ class Todo extends amplify_core.Model {
     return _updatedAt;
   }
   
-  const Todo._internal({required this.id, content, createdAt, updatedAt}): _content = content, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Todo._internal({required this.id, required content, createdAt, updatedAt}): _content = content, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Todo({String? id, String? content}) {
+  factory Todo({String? id, required String content}) {
     return Todo._internal(
       id: id == null ? amplify_core.UUID.getUUID() : id,
       content: content);
@@ -100,7 +109,7 @@ class Todo extends amplify_core.Model {
   }
   
   Todo copyWithModelFieldValues({
-    ModelFieldValue<String?>? content
+    ModelFieldValue<String>? content
   }) {
     return Todo._internal(
       id: id,
@@ -134,8 +143,7 @@ class Todo extends amplify_core.Model {
     
     modelSchemaDefinition.authRules = [
       amplify_core.AuthRule(
-        authStrategy: amplify_core.AuthStrategy.PUBLIC,
-        provider: amplify_core.AuthRuleProvider.IAM,
+        authStrategy: amplify_core.AuthStrategy.PRIVATE,
         operations: const [
           amplify_core.ModelOperation.CREATE,
           amplify_core.ModelOperation.UPDATE,
@@ -148,7 +156,7 @@ class Todo extends amplify_core.Model {
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
       key: Todo.CONTENT,
-      isRequired: false,
+      isRequired: true,
       ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
     ));
     

@@ -6,6 +6,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:my_amplify_app/amplify_outputs.dart';
 import 'package:my_amplify_app/auth/login.dart';
 import 'package:my_amplify_app/models/ModelProvider.dart';
+import 'package:my_amplify_app/splash_screen.dart';
 import 'package:my_amplify_app/todo/list_todo_screen.dart';
 
 Future<void> main() async {
@@ -37,17 +38,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Authenticator(
+      initialStep: AuthenticatorStep.signIn,
       child: MaterialApp(
         builder: Authenticator.builder(),
         title: 'Flutter Demo',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+            inputDecorationTheme: InputDecorationTheme(
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            )),
         initialRoute: '/',
         routes: {
           '/': (BuildContext context) {
-            return const ListTodoScreen();
+            return const SplashScreen();
+          },
+          '/todos': (BuildContext context) {
+            return const AuthenticatedView(child: ListTodoScreen());
           },
         },
       ),
