@@ -31,28 +31,22 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Authenticator(
-      dialCodeOptions: const DialCodeOptions(defaultDialCode: DialCode.jp),
-      initialStep: AuthenticatorStep.onboarding,
-      child: MaterialApp(
-        builder: Authenticator.builder(),
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        initialRoute: '/',
-        routes: {
-          '/': (BuildContext context) {
-            return const Scaffold(body: Center(child: SignOutButton()));
-          },
-          '/profile': (BuildContext context) {
-            return const AuthenticatedView(
-              child: Center(child: Text('Profile')),
-            );
-          },
-        },
+    return MaterialApp(
+      // builder: Authenticator.builder(),
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
+      initialRoute: '/',
+      routes: {
+        '/': (BuildContext context) {
+          return const Login();
+        },
+        '/profile': (BuildContext context) {
+          return Center(child: Text('Profile'));
+        },
+      },
     );
   }
 }

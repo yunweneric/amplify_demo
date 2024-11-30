@@ -83,39 +83,65 @@ class _LoginState extends State<Login> {
           key: _key,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: usernameController,
-                  decoration: InputDecoration(hintText: "User name"),
-                ),
-                TextFormField(
-                  controller: emailController,
-                  decoration: InputDecoration(hintText: "Email"),
-                ),
-                TextFormField(
-                  decoration: InputDecoration(hintText: "Password"),
-                  controller: passwordController,
-                ),
-                if (message != null)
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 20),
                   Text(
-                    message!,
-                    style: TextStyle(color: Colors.red, fontSize: 12),
+                    "Sign up",
+                    style: TextStyle(fontSize: 30),
                   ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_key.currentState!.validate()) {
-                      signUpUser(
-                        username: usernameController.text.trim(),
-                        password: passwordController.text.trim(),
-                        email: emailController.text.trim(),
-                      );
-                    }
-                  },
-                  child: isLoading ? Transform.scale(scale: 0.6, child: CircularProgressIndicator()) : Text("Signup"),
-                )
-              ],
+                  SizedBox(height: 10),
+                  // TextFormField(
+                  //   controller: usernameController,
+                  //   validator: (val) {
+                  //     if (val == null || val.isEmpty) return 'username is required';
+                  //     return null;
+                  //   },
+                  //   decoration: InputDecoration(hintText: "User name"),
+                  // ),
+                  TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    controller: emailController,
+                    decoration: InputDecoration(hintText: "Email"),
+                    validator: (val) {
+                      if (val == null || val.isEmpty) return 'email is required';
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    obscureText: true,
+                    decoration: InputDecoration(hintText: "Password"),
+                    validator: (val) {
+                      if (val == null || val.isEmpty) return 'password is required';
+                      return null;
+                    },
+                    controller: passwordController,
+                  ),
+                  if (message != null)
+                    Text(
+                      message!,
+                      style: TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        message = null;
+                      });
+                      if (_key.currentState!.validate()) {
+                        signUpUser(
+                          username: emailController.text.trim(),
+                          password: passwordController.text.trim(),
+                          email: emailController.text.trim(),
+                        );
+                      }
+                    },
+                    child: isLoading ? Transform.scale(scale: 0.6, child: CircularProgressIndicator()) : Text("Signup"),
+                  )
+                ],
+              ),
             ),
           ),
         ),
