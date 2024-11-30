@@ -1,19 +1,22 @@
 version: 1
-
+backend:
+  phases:
+    build:
+      commands:
+        - echo "Building backend resources with Amplify"
+        - amplify push --yes
 frontend:
   phases:
     preBuild:
       commands:
-        - echo "Setting up Java 17 for Android SDK"
-
-        # Install Java 17
-        - curl -O https://download.java.net/openjdk/jdk17/ri/openjdk-17+35_linux-x64_bin.tar.gz
+        - echo "Setting up Java 8 for Android SDK"
+        # Install Java 8 (OpenJDK 8)
+        - curl -O https://download.java.net/openjdk/jdk8u/8u342-b07/ri/openjdk-8u342-b07-linux-x64.tar.gz
         - mkdir -p $HOME/java
-        - tar -xzf openjdk-17+35_linux-x64_bin.tar.gz -C $HOME/java
-        - export JAVA_HOME=$HOME/java/jdk-17
+        - tar -xzf openjdk-8u342-b07-linux-x64.tar.gz -C $HOME/java
+        - export JAVA_HOME=$HOME/java/jdk1.8.0_342
         - export PATH=$JAVA_HOME/bin:$PATH
         - java -version
-
         # Install Android SDK
         - echo "Installing Android SDK"
         - curl -O https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
@@ -24,15 +27,12 @@ frontend:
         - export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
         - yes | sdkmanager --licenses
         - sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0"
-
         # Install Flutter
         - curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
         - tar xf flutter_linux_3.24.0-stable.tar.xz
         - export PATH="$PATH:$(pwd)/flutter/bin"
         - flutter doctor
-        - ls -la
-        - flutter clean && flutter pub get
-
+        - flutter pub get
     build:
       commands:
         - echo "Building Flutter APK"
